@@ -16,9 +16,20 @@
 		addTodos(){
 			this.todos.push({
 				id: this.todos.length + 1,
-				body: this.todo
+				body: this.todo,
+				completed : false
 			})
 			this.todo=''
+		},
+		get active(){
+			return this.todos.filter( todo => !todo.completed)
+		},
+		deleteTodo(todo){
+			let position  = this.todos.indexOf(todo);
+			this.todos.splice(position, 1);
+		},
+		completedTodo(todo){
+			todo.completed = !todo.completed;
 		}
 	}">
 		<header class="header">
@@ -31,11 +42,11 @@
 			<label for="toggle-all">Mark all as complete</label>
 			<ul class="todo-list">
 				<template x-for="todo in todos" :key="todo.id">
-					<li class="completed">
+					<li :class="{completed : todo.completed}">
 						<div class="view">
-							<input class="toggle" type="checkbox" checked>
+							<input @click="completedTodo(todo)" class="toggle" type="checkbox">
 							<label x-text="todo.body"></label>
-							<button class="destroy"></button>
+							<button @click="deleteTodo(todo)" class="destroy"></button>
 						</div>
 						<input class="edit" value="Create a TodoMVC template">
 					</li>
@@ -43,7 +54,7 @@
 			</ul>
 		</section>
 		<footer class="footer" x-show="todos.length">
-			<span class="todo-count"><strong>0</strong> item left</span>
+			<span class="todo-count"><strong x-text="active.length"></strong> item left</span>
 			<ul class="filters">
 				<li>
 					<a class="selected" href="#/">All</a>
