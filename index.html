@@ -20,17 +20,17 @@
 			<input id="toggle-all" class="toggle-all" type="checkbox">
 			<label for="toggle-all">Mark all as complete</label>
 			<ul class="todo-list">
-				<template x-for="todo in todos" :key="todo.id">
+				<template x-for="todo in filteredTodos" :key="todo.id">
 					<li :class="{
 						editing : todo === editedTodo,
 						completed : todo.completed
 					}">
 						<div class="view">
-							<input @click="completedTodo(todo)" class="toggle" type="checkbox">
+							<input @click="completedTodo(todo)" class="toggle" type="checkbox" x-model="todo.completed">
 							<label @dblclick="editTodo(todo)" x-text="todo.body"></label>
 							<button @click="deleteTodo(todo)" class="destroy"></button>
 						</div>
-						<input @keyup.escape="cancleEdit(todo)" @keyup.enter="completeEdit(todo)" class="edit"
+						<input @keyup.escape="cancleEdit(todo)" @keyup.enter="editComplete(todo)" class="edit"
 							x-model="todo.body">
 					</li>
 				</template>
@@ -40,16 +40,18 @@
 			<span class="todo-count"><strong x-text="active.length"></strong> item left</span>
 			<ul class="filters">
 				<li>
-					<a class="selected" href="#/">All</a>
+					<a @click.prevent="filter='all'" :class="{ selected : filter=='all' }" href="#/">All</a>
 				</li>
 				<li>
-					<a href="#/active">Active</a>
+					<a @click.prevent="filter='active'" :class="{ selected : filter=='active' }"
+						href="#/active">Active</a>
 				</li>
 				<li>
-					<a href="#/completed">Completed</a>
+					<a @click.prevent="filter='completed'" :class="{ selected : filter=='completed' }"
+						href="#/completed">Completed</a>
 				</li>
 			</ul>
-			<button x-show="completed.length" class="clear-completed">Clear completed</button>
+			<button @click="todos = active" x-show="completed.length" class="clear-completed">Clear completed</button>
 		</footer>
 	</section>
 	<footer class="info">
