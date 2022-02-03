@@ -5,12 +5,18 @@ window.todos = function () {
 		filter: "all",
 		editedTodo: null,
 		addTodos() {
+			if (!this.todo) {
+				return;
+			}
 			this.todos.push({
-				id: this.todos.length + 1,
+				id: Date.now(),
 				body: this.todo,
 				completed: false,
 			});
 			this.todo = "";
+		},
+		get allComplete() {
+			return this.todos.length === this.completed.length;
 		},
 		get active() {
 			return this.todos.filter((todo) => !todo.completed);
@@ -46,6 +52,10 @@ window.todos = function () {
 				return this.deleteTodo(todo);
 			}
 			this.editedTodo = null;
+		},
+		toggleAllTodos() {
+			let allComplete = this.allComplete;
+			this.todos.forEach((todo) => (todo.completed = !allComplete));
 		},
 	};
 };

@@ -17,7 +17,7 @@
 				autofocus>
 		</header>
 		<section class="main" x-show="todos.length">
-			<input id="toggle-all" class="toggle-all" type="checkbox">
+			<input @click="toggleAllTodos" x-model="allComplete" id="toggle-all" class="toggle-all" type="checkbox">
 			<label for="toggle-all">Mark all as complete</label>
 			<ul class="todo-list">
 				<template x-for="todo in filteredTodos" :key="todo.id">
@@ -37,7 +37,8 @@
 			</ul>
 		</section>
 		<footer class="footer" x-show="todos.length">
-			<span class="todo-count"><strong x-text="active.length"></strong> item left</span>
+			<span class="todo-count"><strong x-text="active.length"></strong> <span
+					x-text="active.length===1 ? 'item' : 'items'"></span> left</span>
 			<ul class="filters">
 				<li>
 					<a @click.prevent="filter='all'" :class="{ selected : filter=='all' }" href="#/">All</a>
