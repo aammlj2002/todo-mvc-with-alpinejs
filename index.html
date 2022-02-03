@@ -10,28 +10,7 @@
 </head>
 
 <body>
-	<section class="todoapp" x-data="{
-		todos:[],
-		todo:'',
-		addTodos(){
-			this.todos.push({
-				id: this.todos.length + 1,
-				body: this.todo,
-				completed : false
-			})
-			this.todo=''
-		},
-		get active(){
-			return this.todos.filter( todo => !todo.completed)
-		},
-		deleteTodo(todo){
-			let position  = this.todos.indexOf(todo);
-			this.todos.splice(position, 1);
-		},
-		completedTodo(todo){
-			todo.completed = !todo.completed;
-		}
-	}">
+	<section class="todoapp" x-data="todos()">
 		<header class="header">
 			<h1>todos</h1>
 			<input class="new-todo" @keyup.enter="addTodos()" x-model="todo" placeholder="What needs to be done?"
@@ -42,13 +21,17 @@
 			<label for="toggle-all">Mark all as complete</label>
 			<ul class="todo-list">
 				<template x-for="todo in todos" :key="todo.id">
-					<li :class="{completed : todo.completed}">
+					<li :class="{
+						editing : todo === editedTodo,
+						completed : todo.completed
+					}">
 						<div class="view">
 							<input @click="completedTodo(todo)" class="toggle" type="checkbox">
-							<label x-text="todo.body"></label>
+							<label @dblclick="editTodo(todo)" x-text="todo.body"></label>
 							<button @click="deleteTodo(todo)" class="destroy"></button>
 						</div>
-						<input class="edit" value="Create a TodoMVC template">
+						<input @keyup.escape="cancleEdit(todo)" @keyup.enter="completeEdit(todo)" class="edit"
+							x-model="todo.body">
 					</li>
 				</template>
 			</ul>
@@ -66,7 +49,7 @@
 					<a href="#/completed">Completed</a>
 				</li>
 			</ul>
-			<button class="clear-completed">Clear completed</button>
+			<button x-show="completed.length" class="clear-completed">Clear completed</button>
 		</footer>
 	</section>
 	<footer class="info">
@@ -74,13 +57,14 @@
 		<!-- Remove the below line ↓ -->
 		<p>Template by <a href="http://sindresorhus.com">Sindre Sorhus</a></p>
 		<!-- Change this out with your name and url ↓ -->
-		<p>Created by <a href="http://todomvc.com">you</a></p>
+		<p>Created by <a href="http://github.com/aammlj2002">Aung Aung Myo Myat</a></p>
 		<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
 	</footer>
 	<!-- Scripts here. Don't remove ↓ -->
 	<script defer src="https://unpkg.com/alpinejs@3.8.1/dist/cdn.min.js"></script>
 	<script src="node_modules/todomvc-common/base.js"></script>
 	<script src="js/app.js"></script>
+	<script src="js/todos.js"></script>
 </body>
 
 </html>
